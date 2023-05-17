@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Mind Map</title>
+    <title>Mind Map - Edit</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css">
 </head>
 <body>
     <div id="mynetwork"></div>
+    <form method="post">
+        <input type="hidden" name="nodes" id="nodes" value=''>
+        <input type="hidden" name="edges" id="edges" value=''>
+        <button type="submit">Save Changes</button>
+    </form>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
     <script type="text/javascript">
         var nodes = new vis.DataSet({{ nodes|tojson }});
@@ -15,8 +20,25 @@
             nodes: nodes,
             edges: edges
         };
-        var options = {};
+        var options = {
+            manipulation: {
+                enabled: true,
+                addNode: function (data, callback) {
+                    data.label = "New Node";
+                    callback(data);
+                },
+                editNode: function (data, callback) {
+                    data.label = prompt("Enter new label", data.label);
+                    callback(data);
+                },
+                deleteNode: true,
+                addEdge: true,
+                editEdge: true,
+                deleteEdge: true
+            }
+        };
         var network = new vis.Network(container, data, options);
+        var nodes_json = JSON
     </script>
 </body>
 </html>
